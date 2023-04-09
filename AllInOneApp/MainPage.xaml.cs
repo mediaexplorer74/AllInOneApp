@@ -21,6 +21,7 @@ using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Abstractions;
 using System.Threading;
 using AllInOneApp.Views;
+using Windows.UI.Xaml.Media.Imaging;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -31,18 +32,17 @@ namespace AllInOneApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-
-        //Set the scope for API call to user.read
-        private string[] scopes = new string[] { "user.read" };
-        public static GraphServiceClient graphClient;
-
         // Below are the clientId (Application Id) of your app registration and the tenant information.
         // You have to replace:
         // - the content of ClientID with the Application Id for your app registration
-        //private const string ClientId = "bf5566df-d112-4392-bbec-235fdb022d46";
         private const string ClientId = "d6c9fb35-bfd3-4a4b-a7a8-3f565a6c9839";
 
-
+        //Set the scope for API call to user.read
+        private string[] scopes = new string[] { "user.read", "Tasks.ReadWrite", "Calendars.ReadWrite", "Mail.ReadWrite" };
+        public static GraphServiceClient graphClient;
+        public static User user;
+        public static BitmapImage userPicture = new BitmapImage();
+        public static bool isPictureExist = false;
         private const string Tenant = "common"; // Alternatively "[Enter your tenant, as obtained from the Azure portal, e.g. kko365.onmicrosoft.com]"
         private const string Authority = "https://login.microsoftonline.com/" + Tenant;
 
@@ -55,33 +55,50 @@ namespace AllInOneApp
         public MainPage()
         {
             this.InitializeComponent();
-            Authenticate();
         }
 
         /// <summary>
         /// Call AcquireTokenAsync - to acquire a token requiring user to sign in
         /// </summary>
-        private async void Authenticate()//CallGraphButton_Click(object sender, RoutedEventArgs e)
+        private async void Authenticate(object sender, RoutedEventArgs e)
         {
             try
             {
+                LoadingIndicator.IsActive = true;
                 // Sign in user using MSAL and obtain an access token for Microsoft Graph
                 graphClient = await SignInAndInitializeGraphServiceClient(scopes);
 
                 // Call the /me endpoint of Graph
-                User graphUser = await graphClient.Me.GetAsync();
+                user = await graphClient.Me.GetAsync();
+
+                //Get user profile image.
+                try
+                {
+                    var requPicture = await graphClient.Me.Photo.Content.GetAsync();
+
+                    using (var memStream = new MemoryStream())
+                    {
+                        isPictureExist = true;
+                        await requPicture.CopyToAsync(memStream);
+                        memStream.Position = 0;
+
+                        userPicture.SetSource(memStream.AsRandomAccessStream());
+                    }
+                }
+                catch(Exception ex)
+                {
+                    isPictureExist = false;
+                    Debug.WriteLine(ex.ToString());
+                }
+
 
                 // Go back to the UI thread to make changes to the UI
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    ResultText.Text = "Display Name: " + graphUser.DisplayName + "\nBusiness Phone: " + graphUser.BusinessPhones.FirstOrDefault()
-                                      + "\nGiven Name: " + graphUser.GivenName + "\nid: " + graphUser.Id
-                                      + "\nUser Principal Name: " + graphUser.UserPrincipalName;
                     DisplayBasicTokenInfo(authResult);
-                    this.SignOutButton.Visibility = Visibility.Visible;
                 });
 
-
+                LoadingIndicator.IsActive = false;
                 this.Frame.Navigate(typeof(Navigation));
             }
             catch (MsalException msalEx)
@@ -99,18 +116,19 @@ namespace AllInOneApp
         /// </summary>
         private void DisplayBasicTokenInfo(AuthenticationResult authResult)
         {
-            TokenInfoText.Text = "";
-            if (authResult != null)
-            {
-                TokenInfoText.Text += $"User Name: {authResult.Account.Username}" + Environment.NewLine;
-                TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}" + Environment.NewLine;
-            }
+            //TokenInfoText.Text = "";
+            //if (authResult != null)
+            //{
+            //    TokenInfoText.Text += $"User Name: {authResult.Account.Username}" + Environment.NewLine;
+            //    TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}" + Environment.NewLine;
+            //}
         }
         /// <summary>
         /// Displays a message in the ResultText. Can be called from any thread.
         /// </summary>
         private async Task DisplayMessageAsync(string message)
         {
+            ResultText.Visibility = Visibility.Visible;
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () =>
                 {
@@ -132,7 +150,8 @@ namespace AllInOneApp
                  .WithLogging((level, message, containsPii) =>
                  {
                      Debug.WriteLine($"MSAL: {level} {message} ");
-                 }, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
+                 }, 
+                 LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
                 .Build();
 
             // It's good practice to not do work on the UI thread, so use ConfigureAwait(false) whenever possible.
@@ -172,7 +191,7 @@ namespace AllInOneApp
         /// <summary>
         /// Sign out the current user
         /// </summary>
-        private async void SignOutButton_Click(object sender, RoutedEventArgs e)
+        public async void SignOutButton_Click(object sender, RoutedEventArgs e)
         {
             IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync().ConfigureAwait(false);
             IAccount firstAccount = accounts.FirstOrDefault();
@@ -180,16 +199,17 @@ namespace AllInOneApp
             try
             {
                 await PublicClientApp.RemoveAsync(firstAccount).ConfigureAwait(false);
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                {
-                    ResultText.Text = "User has signed out";
-                    //this.CallGraphButton.Visibility = Visibility.Visible;
-                    this.SignOutButton.Visibility = Visibility.Collapsed;
-                });
+                //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                //{
+                //ResultText.Text = "User has signed out";
+                //this.CallGraphButton.Visibility = Visibility.Visible;
+                //this.SignOutButton.Visibility = Visibility.Collapsed;
+                //});
+                //this.Frame.Navigate(typeof(MainPage));
             }
             catch (MsalException ex)
             {
-                ResultText.Text = $"Error signing out user: {ex.Message}";
+                //ResultText.Text = $"Error signing out user: {ex.Message}";
             }
         }
     }

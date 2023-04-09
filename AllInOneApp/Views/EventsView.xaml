@@ -5,15 +5,22 @@
     xmlns:local="using:AllInOneApp.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:AllInOneApp.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <converters:EventDateTimeConverter x:Key="EventDateTimeConverter"/>
+    </Page.Resources>
+
     <Grid>
-        <ListView ItemsSource="{x:Bind myEvents}">
+        
+        <ListView ItemsSource="{x:Bind myEvents}" Height="650">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
@@ -23,10 +30,44 @@
                             <ColumnDefinition Width="47"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Name="subject" Text="{Binding Subject}" Grid.Row="0" FontWeight="Bold"/>
-                        <TextBlock x:Name="organizer" Text="{Binding Organizer}" Grid.Row="1"/>
+                        <TextBlock x:Name="organizer" Text="{Binding Organizer}" Grid.Row="1" FontSize="11"/>
+                        <TextBlock Name="StartTime"  Text="{Binding Starttime, Converter={StaticResource EventDateTimeConverter}}" Grid.Row="2" FontSize="11"/>
+                        <TextBlock Name="EndTime" Text="{Binding Endtime, Converter={StaticResource EventDateTimeConverter}}" Grid.Row="3" FontSize="11"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <Button x:Name="btnAddNewEvent" Content="Add New Event" VerticalAlignment="Bottom">
+            <Button.Flyout>
+                <Flyout>
+                    <Grid Height="400">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="eventTitle" PlaceholderText="Event Title" Header="Title" Grid.Row="0"/>
+                        <TextBox x:Name="eventAttendee" PlaceholderText="Enter one or more attendee/s email with ; seperator" Header="Event Attendees" Grid.Row="1"/>
+                        <StackPanel Grid.Row="2">
+                            <CalendarDatePicker x:Name="eventStartDate" DateFormat="{}{year.full}-{month.integer}-{day.integer}"/>
+                            <!--<ToggleButton x:Name="isAllDayEvent" Content="All Day" />-->
+                            <TimePicker x:Name="eventStartTime" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="3">
+                            <CalendarDatePicker x:Name="eventEndDate" Grid.Column="0"/>
+                            <TimePicker x:Name="eventEndTime" Grid.Column="1"/>
+                        </StackPanel>
+                        <Button x:Name="eventSave" Content="Save" Grid.Row="4" Click="AddNewEvent"/>
+                    </Grid>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
     </Grid>
 </Page>

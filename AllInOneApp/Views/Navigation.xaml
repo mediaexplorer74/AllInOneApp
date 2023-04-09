@@ -8,12 +8,47 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <NavigationView x:Name="NavigationViewControl" ItemInvoked="NavigationViewControl_ItemInvoked" >
+    <Page.Resources>
+        <Flyout  x:Key="ProfileFlyout" Placement="Right" >
+            <StackPanel>
+                <StackPanel HorizontalAlignment="Left" Height="Auto">
+                    <PersonPicture x:Name="userDetailProfile" 
+                                       Width="50" Height="50"/>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Right">
+                    <TextBlock x:Name="userDisplayName" FontWeight="Bold"/>
+                    <TextBlock x:Name="userEmailAddress" TextWrapping="Wrap"/>
+                    <Button Content="Sign out" Click="SignOut"  Height="50" Width="80" BorderThickness="0,0,0,0" Background="Transparent"/>
+                </StackPanel>
+            </StackPanel>
+            
+        </Flyout>
+    </Page.Resources>
+
+    <StackPanel>
+        <NavigationView x:Name="NavigationViewControl" 
+                        ItemInvoked="NavigationViewControl_ItemInvoked" 
+                        SelectedItem="ToDoListView"
+                        PaneDisplayMode="LeftCompact"
+                        IsSettingsVisible="False">
+            <NavigationView.Header>
+                <StackPanel HorizontalAlignment="Right" Margin="0,0,50,0" Background="Transparent" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <PersonPicture x:Name="userProfile" 
+                                       Width="50" Height="50" 
+                                       Grid.Column="0" 
+                                       FlyoutBase.AttachedFlyout="{StaticResource ProfileFlyout}"
+                                       Tapped="userProfile_Tapped"/>
+                    </Grid>
+                </StackPanel>
+            </NavigationView.Header>
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="To Do" Tag="ToDoListView" x:Name="ToDo" Icon="List"/>
                 <NavigationViewItem Content="Email" Tag ="EmailView" x:Name="Email" Icon="Mail"/>
-                <NavigationViewItem Content="Teams" Tag="TeamsView" x:Name="Teams" Icon="People"/>
                 <NavigationViewItem Content="Events" Tag="EventsView"  x:Name="Events" Icon="Calendar"/>
             </NavigationView.MenuItems>
             <Frame x:Name="ContentFrame" NavigationFailed="ContentFrame_NavigationFailed"/>
@@ -28,10 +63,10 @@
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
-                        <Setter Target="NavigationViewControl.PaneDisplayMode" Value="Left"/>
+                        <Setter Target="NavigationViewControl.PaneDisplayMode" Value="LeftCompact"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-    </Grid>
+    </StackPanel>
 </Page>

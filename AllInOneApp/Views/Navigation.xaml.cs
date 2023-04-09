@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -28,6 +29,23 @@ namespace AllInOneApp
         public Navigation()
         {
             this.InitializeComponent();
+            this.userDisplayName.Text = MainPage.user.DisplayName;
+            this.userEmailAddress.Text = MainPage.user.UserPrincipalName;
+
+            if (MainPage.isPictureExist)
+            {
+                this.userProfile.ProfilePicture = MainPage.userPicture;
+                this.userDetailProfile.ProfilePicture = MainPage.userPicture;
+            }
+            else
+            {
+                this.userProfile.DisplayName = MainPage.user.DisplayName;
+                this.userDetailProfile.DisplayName = MainPage.user.DisplayName;
+            }
+
+            var view = Assembly.GetExecutingAssembly().GetType($"AllInOneApp.Views.ToDoListView");
+            ContentFrame.Navigate(view, null, new EntranceNavigationTransitionInfo());
+            NavigationViewControl.SelectedItem = NavigationViewControl.MenuItems[0];
         }
 
         private void NavigationViewControl_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -56,6 +74,19 @@ namespace AllInOneApp
         private void ContentFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
 
+        }
+
+        private void SignOut(object sender, RoutedEventArgs e)
+        {
+            MainPage mainPage = new MainPage();
+            mainPage.SignOutButton_Click(sender, e);
+
+            this.Frame.Navigate(typeof(MainPage));
+        }
+
+        private void userProfile_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
     }
 }

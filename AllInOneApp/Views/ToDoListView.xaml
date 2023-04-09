@@ -4,37 +4,62 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AllInOneApp.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:converters="using:AllInOneApp.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <converters:GraphDateTimeTimeZoneConverter x:Key="GraphDateTimeTimeZoneConverter"/>
+        <converters:TaskStatusConverter x:Key="TaskStatusConverter"/>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="200"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500" />
+            <ColumnDefinition Width="200" />
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ListView ItemsSource="{x:Bind myTasks}" >
+        
+        <ToggleSwitch x:Name="tglShowCompletedTask" OnContent="Show Pending Tasks" 
+                      OffContent="Show Completed Tasks" 
+                      Toggled="SwitchTasks" Height="30" Grid.Column="2" />
+
+        <TextBox x:Name="AddTaskTitle" IsEnabled="True" PlaceholderText="Addtask Title" 
+                  Height="40" Grid.Column="0"></TextBox>
+
+        <CalendarDatePicker x:Name="taskDueDate"  Grid.Column="1" Margin="100,0,0,0"/>
+        <Button x:Name="btnAddTask" Content="Add Task"  Grid.Column="1" Click="AddTask"/>
+
+        <ListView x:Name="MyTasks" ItemsSource="{x:Bind myPendingTasks}" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="400"/>
+                            <ColumnDefinition Width="700"/>
                             <ColumnDefinition Width="47"/>
                         </Grid.ColumnDefinitions>
-                        <RadioButton Content="{Binding Title}" Checked="UpdateTask"/>
-                        <!--<TextBlock Text="{Binding DueDateTime}"/>-->
-                        <SymbolIcon x:Name="taskPriority" Symbol="{Binding TaskPriority}" Tapped="PinTask" Grid.Column="1"/>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <RadioButton Content="{Binding Title}" Checked="UpdateTask" 
+                                     IsChecked="{Binding Status, Converter={StaticResource TaskStatusConverter}}" Grid.Row="0" 
+                                     FontSize="15" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding DueDateTime, Converter={StaticResource GraphDateTimeTimeZoneConverter}}" 
+                                   Grid.Row="1" FontSize="11" Margin="28,-8,0,0"/>
+                        <SymbolIcon x:Name="taskPriority" Symbol="{Binding TaskPriority}" 
+                                    Tapped="PinTask" Grid.Column="1"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <TextBox x:Name="AddTaskTitle" PlaceholderText="Addtask Title" Grid.Row="1" Height="40" Grid.Column="0"></TextBox>
-        <CalendarDatePicker x:Name="taskDueDate" Grid.Column="1" Grid.Row="1"/>
-        <Button x:Name="btnAddTask" Content="Add Task" Click="AddTask" Grid.Row="1" Grid.Column="2" />
+        
+       
     </Grid>
 </Page>
