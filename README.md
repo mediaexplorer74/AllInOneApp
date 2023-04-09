@@ -4,7 +4,7 @@
 ## Screenshots
 ![Shot 1](Images/shot1.png)
 ![Shot 2](Images/shot2.png)
-![Shot 3](Images/shot2.png)
+![Shot 3](Images/shot3.png)
 
 ## My 2 cents
 - I'm explored the code; Microsoft Graph 5.0 cannot be downgraded, so... no W10M / no net standard 1.4
