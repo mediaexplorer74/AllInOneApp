@@ -19,19 +19,16 @@ The motivation behind creating this app was to have just one app that enables al
 ### Current implementation:
 
 ToDo : 
-
 - Toggle between pending and completed task
 - Add new task with due date
 - Set task priority
 - Update task status to done
 
 
-Email:
-
+Email :
 - Shows only important emails
 
-### Calendar:
-
+Calendar :
 - Shows upcoming events
 - Add new event
 - Note: This application runs on client ID MainPage.xaml.cs so we need to change ID on line 38
