@@ -1,4 +1,5 @@
-# AllInOneApp
+# AllInOneApp "15063"
+
 [![Hack Together: Microsoft Graph and .NET](https://img.shields.io/badge/Microsoft%20-Hack--Together-orange?style=for-the-badge&logo=microsoft)](https://github.com/microsoft/hack-together)
 
 ## Screenshots
@@ -7,8 +8,14 @@
 ![Shot 3](Images/shot3.png)
 
 ## My 2 cents
-- I'm explored the code; Microsoft Graph 5.0 cannot be downgraded, so... no W10M / no net standard 1.4
-- I tested and re-designed this project a veeeeeryyyy little. ;))  
+- I tried to process an codebase downgrade, so... welcome to W10M  & net standard 1.4
+- I noticed that MS auth demaged at now.... it needs to be fixed.  
+
+## Progress / Status
+- Microsoft.Graph "block" updated to 4.0 (.net standard 1.4)
+- Microsoft.Graph.Core updated to 2.x (.net standard 1.4)
+- Azure.Core added (.net standard 1.4)
+- System.Text.Json added (.net standard 1.4)
 
 
 ## Project Description
