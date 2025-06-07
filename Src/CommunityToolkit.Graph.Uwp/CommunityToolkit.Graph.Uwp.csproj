@@ -1,0 +1,53 @@
+<Project Sdk="MSBuild.Sdk.Extras">
+
+  <PropertyGroup>
+    <TargetFramework>uap10.0.16299</TargetFramework>
+    <Title>Windows Community Toolkit Graph Uwp Controls and Helpers</Title>
+    <Description>
+      This library provides Microsoft Graph UWP XAML controls. It is part of the Windows Community Toolkit.
+
+      Controls:
+      - GraphPresenter: A specialized ContentPresenter for fetching and displaying data from Microsoft Graph.
+      - LoginButton: The Login Control leverages the global authentication provider to support the sign-in processes for Microsoft Graph and beyond.
+      - PersonView: The PersonView control displays a user photo and can display their name and e-mail.
+      - PeoplePicker: The PeoplePicker Control is a simple control that allows for selection users.
+      
+      Extensions:
+      - FrameworkElement.IsVisibleWhen(ProviderState): Extension on FrameworkElement for toggling visibility in response to changes in the global authentcation provider.
+      
+      Triggers:
+      - ProviderStateTrigger: StateTrigger for reacting to changes in the global authentcation provider.
+    </Description>
+    <PackageTags>UWP Community Toolkit Windows Controls Microsoft Graph Login Person PeoplePicker Presenter</PackageTags>
+    <LangVersion>10.0</LangVersion>
+  </PropertyGroup>
+    
+	<ItemGroup>
+    <PackageReference Include="Microsoft.Graph" Version="4.48.0" />
+    <PackageReference Include="Microsoft.Toolkit" Version="7.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommunityToolkit.Authentication\CommunityToolkit.Authentication.csproj" />
+    <ProjectReference Include="..\CommunityToolkit.Graph\CommunityToolkit.Graph.csproj" />
+  </ItemGroup>
+      
+  <ItemGroup>
+    <Content Include="Assets\person.png" />
+  </ItemGroup> 
+
+  <ItemGroup>
+    <None Include="VisualStudioToolsManifest.xml" Pack="true" PackagePath="tools" />
+    <None Include="$(OutDir)\Design\$(MSBuildProjectName).Design*.dll;$(OutDir)\Design\$(MSBuildProjectName).Design*.pdb" Pack="true" PackagePath="lib\$(TargetFramework)\Design" />
+  </ItemGroup>
+
+  <!-- https://weblogs.asp.net/rweigelt/disable-warnings-in-generated-c-files-of-uwp-app -->
+  <Target Name="PragmaWarningDisablePrefixer" AfterTargets="MarkupCompilePass2">
+    <ItemGroup>
+      <GeneratedCSFiles Include="**\*.g.cs;**\*.g.i.cs" />
+    </ItemGroup>
+    <Message Text="CSFiles: @(GeneratedCSFiles->'&quot;%(Identity)&quot;')" />
+    <Exec Command="for %%f in (@(GeneratedCSFiles->'&quot;%(Identity)&quot;')) do echo #pragma warning disable &gt; %%f.temp &amp;&amp; type %%f &gt;&gt; %%f.temp &amp;&amp; move /y %%f.temp %%f &gt; NUL" />
+  </Target>
+
+</Project>

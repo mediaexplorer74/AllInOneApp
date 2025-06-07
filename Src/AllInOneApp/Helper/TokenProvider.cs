@@ -1,4 +1,4 @@
-﻿//using Microsoft.Kiota.Abstractions.Authentication;
+﻿using Microsoft.Kiota.Abstractions.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;

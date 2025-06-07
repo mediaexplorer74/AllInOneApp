@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+      
+    <Title>Windows Community Toolkit .NET Standard Graph Services</Title>
+    <Description>
+        This package includes .NET Standard code helpers such as:
+
+        Extensions:
+        - GraphExtensions: Helpers for common tasks related to the Microsoft Graph in context of the available controls and helpers.
+        - ProviderExtensions: Extension on IProvider for accessing a pre-configured GraphServiceClient instance.
+
+        Helpers:
+        - OneDriveStorageHelper: A helper for interacting with data stored via files and folders in OneDrive.
+        - UserExtensionStorageHelper: A helper for interacting with open extensions on the Graph User to store data in key/value pairs.
+    </Description>
+    <PackageTags>Windows Community Toolkit Microsoft Graph Provider Extensions Helpers Roaming Settings</PackageTags>
+    <LangVersion>10.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Graph" Version="4.5.0" />
+    <PackageReference Include="Microsoft.Toolkit" Version="7.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommunityToolkit.Authentication\CommunityToolkit.Authentication.csproj" />
+  </ItemGroup>
+</Project>

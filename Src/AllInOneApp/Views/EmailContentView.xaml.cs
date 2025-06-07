@@ -1,11 +1,9 @@
 ﻿using AllInOneApp.Models;
-using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-//using Tavis.UriTemplates;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -21,9 +19,9 @@ using Windows.UI.Xaml.Navigation;
 
 namespace AllInOneApp.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+    /// <summary>  
+    /// An empty page that can be used on its own or navigated to within a Frame.  
+    /// </summary>  
     public sealed partial class EmailContentView : Page
     {
         public EmailContentView()
@@ -37,29 +35,22 @@ namespace AllInOneApp.Views
 
             var parameters = (MailDetails)e.Parameter;
 
-            string[] strings = parameters.body.Split('\\');
+            // parameters.Name  
+            // parameters.Text  
+            // ...  
 
+            // Create run and set text  
+            Run run = new Run();
+            run.Text = parameters.body;
 
-            string toRecipients = string.Empty;
-            foreach(PersonDetail pd in parameters.toRecipients)
-            {
-                toRecipients = string.IsNullOrEmpty(toRecipients) ? pd.Address : toRecipients + ";\n      " + pd.Address;
-            }
+            Paragraph paragraph = new Paragraph();
+            paragraph.Inlines.Add(run);
 
-            string ccRecipients = string.Empty;
-            foreach (PersonDetail pd in parameters.ccRecipients)
-            {
-                ccRecipients = string.IsNullOrEmpty(ccRecipients) ? pd.Address : ccRecipients + "; " + pd.Address;
-            }
+            this.from.Text = parameters.from;
 
-            this.subject.Text= parameters.subject;
-            this.from.Text = "From: "+parameters.from;
-            this.to.Text = "To: " + toRecipients;
-            this.cc.Text = string.IsNullOrEmpty(ccRecipients)? "":"cc: " + ccRecipients;
-            
-            //this.mailBody.Blocks.Add(paragraph);
-            this.mailBody.Text = strings[0];
-            
+            // Fix: Replace 'Blocks' with 'Inlines' for TextBlock  
+            this.mailBody.Inlines.Add(new Run { Text = parameters.body });
+            this.mailBody.Text = parameters.body;          
         }
     }
 }

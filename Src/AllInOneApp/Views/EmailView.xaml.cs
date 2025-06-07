@@ -3,15 +3,13 @@ using Microsoft.Graph;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-//using System.Drawing;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -39,20 +37,15 @@ namespace AllInOneApp.Views
             gc = MainPage.graphClient;
 
             GetMyImportantEmail();
-
-            this.myImpEmails.SelectedIndex = 0;
         }
 
         private async void GetMyImportantEmail()
         {
             try
             {
-                /*
-                //.GetAsync((requestConfiguration)
-                var result = await gc.Me.Messages.Request((requestConfiguration) =>
+                var result = await gc.Me.Messages.GetAsync((requestConfiguration) =>
                 {
                     requestConfiguration.QueryParameters.Filter = "importance eq 'high'";
-                    requestConfiguration.Headers.Add("Prefer", "outlook.body-content-type='text'");
                 });
 
                 if(result == null || result.Value.Count > 0)
@@ -60,28 +53,6 @@ namespace AllInOneApp.Views
                     for(int i = 0; i < result.Value.Count; i++)
                     {
                         var currValue = result.Value[i];
-
-                        List<PersonDetail> toRecipients = new List<PersonDetail>();
-
-                        foreach(var curruser in currValue.ToRecipients)
-                        {
-                            toRecipients.Add(new PersonDetail
-                            {
-                                Name = curruser.EmailAddress.Name,
-                                Address = curruser.EmailAddress.Address,
-                            });
-                        }
-
-                        List<PersonDetail> ccRecipients = new List<PersonDetail>();
-
-                        foreach (var curruser in currValue.CcRecipients)
-                        {
-                            toRecipients.Add(new PersonDetail
-                            {
-                                Name = curruser.EmailAddress.Name,
-                                Address = curruser.EmailAddress.Address,
-                            });
-                        }
 
                         myEmails.Add(new MailDetails
                         {
@@ -91,28 +62,26 @@ namespace AllInOneApp.Views
                             isRead=currValue.IsRead.Value,
                             from=currValue.From.EmailAddress.Address,
                             fromDisplayName = currValue.From.EmailAddress.Name,
-                            subjectColor = currValue.IsRead.Value ? Color.Black : Color.Blue,
-                            toRecipients= toRecipients,
-                            ccRecipients= ccRecipients,
+                            subjectColor = currValue.IsRead.Value ? Color.Black : Color.Blue
+                            //toRecipients=currValue.ToRecipients
+                            //ccRecipients=currValue.CcRecipients
                         });
                     }
                     
                 }
-                Debug.WriteLine(result);
-                */
-
+                Console.WriteLine(result);
             }
             catch(Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
+                Console.WriteLine(ex.ToString());
             }
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var data = (ListView)sender;
-
-            Type view = default;//Assembly.GetExecutingAssembly().GetType($"AllInOneApp.Views.EmailContentView");
+            
+            var view = Assembly.GetExecutingAssembly().GetType($"AllInOneApp.Views.EmailContentView");
             //if (string.IsNullOrWhiteSpace(clickedView)) return false;
 
             EmailContent.Navigate(view, data.SelectedItem, new EntranceNavigationTransitionInfo());

@@ -1,0 +1,31 @@
+<Project Sdk="MSBuild.Sdk.Extras">
+    
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <!--TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion-->
+    <SupportedOSPlatformVersion>7</SupportedOSPlatformVersion>
+      
+    <Title>Windows Community Toolkit .NET Standard Auth Services</Title>
+    <Description>
+        This library provides an authentication provider based on the native Windows dialogues. It is part of the Windows Community Toolkit.
+        
+        Classes:
+        - MsalProvider: An authentication provider based on MSAL for .NET.
+    </Description>
+    <PackageTags>Community Toolkit Provider Authentication Auth Msal</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Graph.Core" Version="2.0.14" />
+    <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.25.0" />
+  </ItemGroup>
+
+  <!--ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+      <PackageReference Include="Microsoft.Identity.Client.Desktop" Version="4.48.1" />
+  </ItemGroup-->
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommunityToolkit.Authentication\CommunityToolkit.Authentication.csproj" />
+  </ItemGroup>
+
+</Project>

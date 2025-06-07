@@ -1,0 +1,20 @@
+<Project Sdk="MSBuild.Sdk.Extras">
+
+  <PropertyGroup>
+    <TargetFramework>uap10.0.16299</TargetFramework>
+    <Title>Windows Community Toolkit Graph Uwp Authentication Provider</Title>
+    <Description>
+      This library provides an authentication provider based on the native Windows dialogues.
+
+      Classes:
+      - WindowsProvider: An authentication provider based on the native AccountsSettingsPane in Windows.
+    </Description>
+    <PackageTags>UWP Community Toolkit Provider Authentication Auth Windows</PackageTags>
+    <LangVersion>10.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommunityToolkit.Authentication\CommunityToolkit.Authentication.csproj" />
+  </ItemGroup>
+
+</Project>

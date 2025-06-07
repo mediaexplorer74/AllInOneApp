@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Drawing;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI;
 
 namespace AllInOneApp.Models
 {
@@ -18,8 +17,8 @@ namespace AllInOneApp.Models
         public string body { get; set; }
         public string from { get; set; }
         public string fromDisplayName { get; set; }
-        public List<PersonDetail> toRecipients { get; set; }
-        public List<PersonDetail> ccRecipients { get; set; }
+        public string toRecipients { get; set; }
+        public string ccRecipients { get; set; }
         public string createdDateTime { get; set; }
     }
 }
