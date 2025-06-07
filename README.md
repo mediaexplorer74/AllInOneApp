@@ -7,8 +7,8 @@
 ![](Images/sshot02.png)
 
 ## My 2 cents
-- I tried to process an codebase downgrade, so... welcome to W10M  & net standard 1.4
-- I noticed that MS auth demaged at now.... it needs to be fixed.  
+- Good: I tried to process an codebase "downgrade" via special project tuning (see AllInOneApp.csproj), so... welcome to W10M 
+- Bad: I noticed that MS auth demaged at now.... it needs to be fixed. :( 
 
 ## Progress / Status
 - Work-in-progress
